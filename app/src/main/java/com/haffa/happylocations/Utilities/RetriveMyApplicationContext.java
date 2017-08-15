@@ -9,10 +9,6 @@ import android.content.Context;
 
 public class RetriveMyApplicationContext extends Application {
 
-   /*Don't forget to mention RetriveMyApplicationContext Class in Manifests    File otherwise it will throw NullPointer Exception
-    <application
-    android:name=".volley.RetriveMyApplicationContext"*/
-
 
     private static RetriveMyApplicationContext mRetriveMyApplicationContext;
 

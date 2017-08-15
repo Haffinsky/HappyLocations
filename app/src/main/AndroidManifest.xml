@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".FavoritesActivity"></activity>
+
+        <provider
+            android:name=".Data.LocationContentProvider"
+            android:authorities="rafal.happylocations" />
+
     </application>
 
 </manifest>
