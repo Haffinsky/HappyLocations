@@ -63,6 +63,7 @@
                 android:scaleType="centerInside"
                 android:layout_margin="10dp"
                 android:padding="35dp"
+                android:id="@+id/map_button"
                 />
 
             <ImageButton

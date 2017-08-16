@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.haffa.happylocations.Data.DatabaseHelper;
 import com.haffa.happylocations.LocationLogic.LocationFetcher;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import static com.haffa.happylocations.Utilities.RetriveMyApplicationContext.get
 
 public class WelcomeScreenFragment extends Fragment {
     LocationFetcher locationFetcher;
-    ImageButton phoneLocationButton, favoritesButton;
+    ImageButton phoneLocationButton, favoritesButton, mapButton;
     Intent intent;
 
     public WelcomeScreenFragment() {
@@ -45,6 +46,7 @@ public class WelcomeScreenFragment extends Fragment {
         locationFetcher = new LocationFetcher();
         phoneLocationButton = (ImageButton) rootView.findViewById(R.id.phoneLocationButton);
         favoritesButton = (ImageButton) rootView.findViewById(R.id.favorites_button);
+        mapButton = (ImageButton) rootView.findViewById(R.id.map_button);
 
         phoneLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +59,13 @@ public class WelcomeScreenFragment extends Fragment {
             public void onClick(View v) {
                 intent = new Intent(getAppContext(), FavoritesActivity.class);
                 startActivity(intent);
+            }
+        });
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper dbh = new DatabaseHelper(getAppContext());
+                dbh.dropAndRecreateFavoritesDatabase();
             }
         });
 

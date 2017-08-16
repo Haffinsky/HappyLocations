@@ -9,6 +9,10 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
+import static com.haffa.happylocations.Data.DatabaseHelper.ID;
+import static com.haffa.happylocations.Data.DatabaseHelper.TABLE_NAME;
 
 /**
  * Created by Rafal on 8/15/2017.
@@ -42,7 +46,7 @@ public class LocationContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(DatabaseHelper.TABLE_NAME);
+        queryBuilder.setTables(TABLE_NAME);
 
         int uriType = uriMatcher.match(uri);
         switch (uriType){
@@ -75,7 +79,7 @@ public class LocationContentProvider extends ContentProvider {
         long id = 0;
         switch (uriType){
             case LOCATIONS:
-            id = db.insert(databaseHelper.TABLE_NAME, null, values);
+            id = db.insert(TABLE_NAME, null, values);
             break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -91,6 +95,29 @@ public class LocationContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        int uriType = uriMatcher.match(uri);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        int rowsUpdated = 0;
+        switch (uriType) {
+            case LOCATIONS:
+                rowsUpdated = db.update(TABLE_NAME,
+                        values, selection, selectionArgs);
+                break;
+            case LOCATIONS_ID:
+                String id = uri.getLastPathSegment();
+                if (TextUtils.isEmpty(selection)) {
+                    rowsUpdated = db.update(TABLE_NAME, values,
+                            ID + "=" + id, null);
+                } else {
+                    rowsUpdated = db.update(TABLE_NAME, values,
+                            ID + "=" + id + " and " + selection, selectionArgs);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+getContext().getContentResolver().notifyChange(uri, null);
+        return rowsUpdated;
+        }
     }
-}
+

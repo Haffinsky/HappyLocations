@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import static com.haffa.happylocations.Data.DatabaseHelper.DISPLAY_TEXT;
+import static com.haffa.happylocations.Data.DatabaseHelper.ID;
 import static com.haffa.happylocations.Data.DatabaseHelper.LATITUDE;
 import static com.haffa.happylocations.Data.DatabaseHelper.LONGITUDE;
 import static com.haffa.happylocations.Data.LocationContentProvider.CONTENT_AUTHORITY;
@@ -35,7 +36,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     FavoritesAdapter adapter;
     static final int LOCATION_LOADER = 1;
     Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY + "/locations");
-    String[] projection = {DISPLAY_TEXT, LATITUDE, LONGITUDE};
+    String[] projection = {ID, DISPLAY_TEXT, LATITUDE, LONGITUDE};
     private ItemTouchHelper itemTouchHelper;
     public FavoritesFragment() {}
 
