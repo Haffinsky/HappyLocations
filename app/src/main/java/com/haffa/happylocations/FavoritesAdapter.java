@@ -1,10 +1,13 @@
 package com.haffa.happylocations;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.util.Log;
@@ -14,15 +17,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.haffa.happylocations.Data.DatabaseHelper;
 import com.haffa.happylocations.GestureHandler.ItemTouchHelperAdapter;
 import com.haffa.happylocations.GestureHandler.ItemTouchHelperViewHolder;
 import com.haffa.happylocations.GestureHandler.OnListChangedListener;
 
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.haffa.happylocations.Data.DatabaseHelper.DISPLAY_TEXT;
@@ -32,6 +39,7 @@ import static com.haffa.happylocations.Data.DatabaseHelper.LONGITUDE;
 import static com.haffa.happylocations.Data.DatabaseHelper.TABLE_NAME;
 import static com.haffa.happylocations.Data.LocationContentProvider.CONTENT_AUTHORITY;
 import static com.haffa.happylocations.Utilities.RetriveMyApplicationContext.getAppContext;
+import static com.haffa.happylocations.Utilities.RetriveMyApplicationContext.getInstance;
 
 /**
  * Created by Rafal on 8/14/2017.
@@ -43,25 +51,34 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     Set<String> savedSet;
     Set<String> retrievedSet = new HashSet<>();
     private ArrayList<String> locations;
-    OnListChangedListener onListChangedListener;
+    ContentValues fromValues, toValues;
     String key = "key";
-    ArrayList<String> retrievedList = new ArrayList<>();
+    Type listType = new TypeToken<List<String>>() {
+    }.getType();
+    private ArrayList<String> retrievedList;
     ContentResolver resolver = getAppContext().getContentResolver();
     Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY + "/locations");
     String[] projection = {DISPLAY_TEXT, LATITUDE, LONGITUDE};
     DatabaseHelper databaseHelper = new DatabaseHelper(getAppContext());
 
-    public FavoritesAdapter(){
+    public FavoritesAdapter() {
 
-        locations = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
+        String retrievedJsonListOfLocations = readFromSharedPreferences(key);
 
-        if (locations.size() != retrievedList.size()) {
-            retrievedList = new ArrayList<>(locations);
-        }  else {
-           // retrievedList = tinyDB.getListString(key);
-            Log.v("RETRIEVING LITS", "ATYY");
+        retrievedList = new Gson().fromJson(retrievedJsonListOfLocations, listType);
+         locations = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
+
+        if (retrievedJsonListOfLocations == null || retrievedList.size() == 1 || retrievedList.size() < locations.size()) {
+            Log.v("THAT ONE", "aa");
+            locations = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
+        } else {
+            locations = new Gson().fromJson(retrievedJsonListOfLocations, listType);
+            Log.v("THIS ONE", "zz");
         }
     }
+
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -74,12 +91,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     @Override
     public void onBindViewHolder(FavoritesAdapter.ViewHolder holder, int position) {
-            holder.locationTextView.setText(retrievedList.get(position));
+            holder.locationTextView.setText(locations.get(position));
 }
 
     @Override
     public int getItemCount() {
-        return retrievedList.size();
+        return locations.size();
     }
 
     public void swapCursor(final Cursor cursor) {
@@ -89,51 +106,22 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-
-        String prev = retrievedList.remove(fromPosition);
-        retrievedList.add(toPosition > fromPosition ? toPosition - 1 : toPosition, prev);
-
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(locations, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(locations, i, i - 1);
+            }
+        }
         notifyItemMoved(fromPosition, toPosition);
+
         Gson gson = new Gson();
 
-        Log.v("The first entry is", retrievedList.get(0));
-        Log.v("The second entry is", retrievedList.get(1));
+        String jsonListOfLocations = gson.toJson(locations);
+        saveToSharedPreferences(key, jsonListOfLocations);
 
-        //TODO: do the magic logic here, save it as json in shared prefs and read in the onCreate
-
-        String jsonListOfLocations = gson.toJson(retrievedList);
-
-        Log.v("THE LIST IS ", jsonListOfLocations);
-
-
-       /* databaseHelper = new DatabaseHelper(getAppContext());
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
-        notifyItemMoved(fromPosition, toPosition);
-
-        cursor.moveToPosition(fromPosition);
-
-        Log.v("FROM POSITION ", String.valueOf(fromPosition));
-        Log.v("TO POSITION ", String.valueOf(toPosition));
-
-        fromValues.put(DISPLAY_TEXT, cursor.getString(1));
-        fromValues.put(LONGITUDE, cursor.getString(2));
-        fromValues.put(LATITUDE, cursor.getString(3));
-
-        String fromID = cursor.getString(0);
-
-        cursor.moveToPosition(toPosition);
-
-        String toID = cursor.getString(0);
-
-        toValues.put(DISPLAY_TEXT, cursor.getString(1));
-        toValues.put(LONGITUDE, cursor.getString(2));
-        toValues.put(LATITUDE, cursor.getString(3));
-
-
-
-        db.update(TABLE_NAME, fromValues, ID + " = ?", new String[]{toID});
-        db.update(TABLE_NAME, toValues, ID + " = ?", new String[]{fromID});*/
     }
 
     @Override
@@ -141,13 +129,24 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         databaseHelper = new DatabaseHelper(getAppContext());
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
+
+        locations.remove(position);
+
+
+        Gson gson = new Gson();
+        String jsonListOfLocations = gson.toJson(locations);
+        saveToSharedPreferences(key, jsonListOfLocations);
+
         cursor.moveToPosition(position);
+
         String deletePosition = cursor.getString(0);
         db.delete(TABLE_NAME, ID  + " = ?", new String[]{deletePosition});
 
 
-    }
+        notifyItemRemoved(position);
 
+
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             ItemTouchHelperViewHolder {
@@ -173,6 +172,17 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         public void onItemClear() {
             itemView.setBackgroundColor(0);
         }
+    }
+    public void saveToSharedPreferences(String key, String json){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, json);
+        editor.apply();
+    }
+    public String readFromSharedPreferences(String key){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+        String string = preferences.getString(key, null);
+        return string;
     }
 
 }

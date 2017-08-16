@@ -26,9 +26,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            DISPLAY_TEXT + " TEXT, " +
-            LATITUDE + " TEXT, " +
-            LONGITUDE + " TEXT " + " );";
+            DISPLAY_TEXT + " TEXT UNIQUE, " +
+            LATITUDE + " TEXT UNIQUE, " +
+            LONGITUDE + " TEXT UNIQUE " + " );";
 
     //for testing purposes
     String SQL_DROP_LOCATION_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;

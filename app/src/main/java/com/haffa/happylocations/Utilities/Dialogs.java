@@ -65,9 +65,13 @@ public class Dialogs {
                                         .show();
                                 displayText = title + " " + header;
 
+
+
                                 values.put(databaseHelper.DISPLAY_TEXT, displayText);
                                 values.put(databaseHelper.LONGITUDE, longitude);
-                                values.put(databaseHelper.LATITUDE, latitude);
+                                values.put(databaseHelper.LATITUDE, latitude
+
+                                );
 
                                 resolver.insert(BASE_CONTENT_URI, values);
 
