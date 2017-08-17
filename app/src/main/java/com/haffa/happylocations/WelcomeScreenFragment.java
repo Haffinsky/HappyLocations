@@ -64,8 +64,8 @@ public class WelcomeScreenFragment extends Fragment {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHelper dbh = new DatabaseHelper(getAppContext());
-                dbh.dropAndRecreateFavoritesDatabase();
+                intent = new Intent(getAppContext(), MapsActivity.class);
+                startActivity(intent);
             }
         });
 

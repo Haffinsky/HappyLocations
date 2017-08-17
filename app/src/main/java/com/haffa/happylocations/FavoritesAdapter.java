@@ -48,17 +48,11 @@ import static com.haffa.happylocations.Utilities.RetriveMyApplicationContext.get
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder>  implements ItemTouchHelperAdapter {
 
     Cursor cursor;
-    Set<String> savedSet;
-    Set<String> retrievedSet = new HashSet<>();
     private ArrayList<String> locations;
-    ContentValues fromValues, toValues;
     String key = "key";
     Type listType = new TypeToken<List<String>>() {
     }.getType();
     private ArrayList<String> retrievedList;
-    ContentResolver resolver = getAppContext().getContentResolver();
-    Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY + "/locations");
-    String[] projection = {DISPLAY_TEXT, LATITUDE, LONGITUDE};
     DatabaseHelper databaseHelper = new DatabaseHelper(getAppContext());
 
     public FavoritesAdapter() {
@@ -66,14 +60,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         String retrievedJsonListOfLocations = readFromSharedPreferences(key);
 
         retrievedList = new Gson().fromJson(retrievedJsonListOfLocations, listType);
-         locations = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
+        locations = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
 
         if (retrievedJsonListOfLocations == null || retrievedList.size() == 1 || retrievedList.size() < locations.size()) {
-            Log.v("THAT ONE", "aa");
             locations = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
         } else {
             locations = new Gson().fromJson(retrievedJsonListOfLocations, listType);
-            Log.v("THIS ONE", "zz");
         }
     }
 

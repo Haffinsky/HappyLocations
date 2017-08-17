@@ -7,8 +7,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,8 +20,11 @@ import com.haffa.happylocations.Data.DatabaseHelper;
 import com.haffa.happylocations.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
+import static com.haffa.happylocations.Data.DatabaseHelper.DISPLAY_TEXT;
+import static com.haffa.happylocations.Data.DatabaseHelper.TABLE_NAME;
 import static com.haffa.happylocations.Utilities.RetriveMyApplicationContext.getAppContext;
 
 /**
@@ -33,15 +38,17 @@ public class Dialogs {
     ContentValues values = new ContentValues();
     DatabaseHelper databaseHelper = new DatabaseHelper(getAppContext());
     String displayText;
+    ArrayList<String> favoriteStrings = new ArrayList<>();
 
-    public void Dialogs(){}
+    public void Dialogs() {
+    }
 
     public void displayDialog(final String title,
                               final String header,
                               String text,
                               final Activity activity,
                               final String longitude,
-                              final String latitude){
+                              final String latitude) {
 
         final FancyAlertDialog.Builder alert = new FancyAlertDialog.Builder(activity)
                 .setImageDrawable(ResourcesCompat.
@@ -59,22 +66,33 @@ public class Dialogs {
                     public void OnClick(View view, Dialog dialog) {
                         dialog.dismiss();
 
-                                Toast.makeText(getAppContext(),
-                                        "saving to favorites...",
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                                displayText = title + " " + header;
+                        displayText = title + " " + header;
 
+                        favoriteStrings = databaseHelper.GetAllVLocations(TABLE_NAME, new String[]{DISPLAY_TEXT});
 
+                        if (!favoriteStrings.contains(displayText)) {
 
-                                values.put(databaseHelper.DISPLAY_TEXT, displayText);
-                                values.put(databaseHelper.LONGITUDE, longitude);
-                                values.put(databaseHelper.LATITUDE, latitude
+                            favoriteStrings.add(displayText);
 
-                                );
+                            Toast.makeText(getAppContext(),
+                                    "saving to favorites...",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
 
-                                resolver.insert(BASE_CONTENT_URI, values);
+                            values.put(DISPLAY_TEXT, displayText);
+                            values.put(databaseHelper.LONGITUDE, longitude);
+                            values.put(databaseHelper.LATITUDE, latitude
 
+                            );
+                            resolver.insert(BASE_CONTENT_URI, values);
+
+                        } else {
+
+                            Toast.makeText(getAppContext(),
+                                    "location already saved",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
                     }
                 })
                 .setOnNegativeClicked(new FancyAlertDialog.OnNegativeClicked() {
@@ -86,4 +104,5 @@ public class Dialogs {
                 .build();
         alert.show();
     }
+
 }
