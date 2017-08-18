@@ -5,20 +5,47 @@
     android:orientation="vertical"
     tools:context="com.haffa.happylocations.FavoritesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:src="@drawable/globe"
-        android:layout_margin="10dp"
-        />
-
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/favorites_list"
-        >
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/appbar_height"
+            android:fitsSystemWindows="true"
+            android:gravity="bottom">
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?colorPrimaryDark">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/app_name"
+                    android:paddingLeft="@dimen/image_view_padding"
+                    android:src="@drawable/logo" />
+
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <!-- TODO: Update blank fragment layout -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/globe" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/favorites_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 </LinearLayout>

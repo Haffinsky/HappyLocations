@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.haffa.happylocations.FavoritesActivity">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/grid_fragment_container">
+
 
         <fragment android:name="com.haffa.happylocations.FavoritesFragment"
             android:layout_width="match_parent"
@@ -17,5 +19,6 @@
             android:id="@+id/favorites_fragment">
         </fragment>
     </FrameLayout>
+
 
 </LinearLayout>

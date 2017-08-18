@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="darkGrey">#424242</color>
     <color name="favoriteColor">#EF6C00</color>
+    <color name="textColorBlack">#000</color>
+    <color name="phoneButtonColor">#607D8B</color>
+    <color name="favButtonColor">#607D8B</color>
+    <color name="mapButtonColor">#607D8B</color>
 </resources>

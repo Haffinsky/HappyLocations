@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,73 +10,75 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/appbar_height"
+            android:fitsSystemWindows="true"
+            android:gravity="bottom">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?colorPrimaryDark"
+                android:text=" ">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/app_name"
+                    android:paddingLeft="@dimen/image_view_padding"
+                    android:src="@drawable/logo" />
+
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
         <!-- layout holding buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:orientation="horizontal"
-            >
+            android:layout_marginLeft="@dimen/linear_layout_margin"
+            android:layout_marginRight="@dimen/linear_layout_margin"
+            android:orientation="vertical">
 
             <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="160dp"
-                android:background="#689F38"
-                android:src="@drawable/phone_location_white"
-                android:scaleType="centerInside"
-                android:layout_margin="10dp"
-                android:padding="25dp"
                 android:id="@+id/phoneLocationButton"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/phone_button_margin_bottom"
+                android:layout_marginTop="@dimen/phone_button_margin_top"
+                android:layout_weight="1"
+                android:background="@color/phoneButtonColor"
+                android:padding="@dimen/phone_button_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/phone_location_white" />
 
             <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="160dp"
-                android:background="#EF6C00"
-                android:src="@drawable/map_list_white"
-                android:scaleType="centerInside"
-                android:layout_margin="10dp"
-                android:padding="30dp"
                 android:id="@+id/favorites_button"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal"
-            >
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/fav_button_margin_top_bottom"
+                android:layout_marginTop="@dimen/fav_button_margin_top_bottom"
+                android:layout_weight="1"
+                android:background="@color/favButtonColor"
+                android:padding="@dimen/fav_button_padding"
+                android:scaleType="centerInside"
+                android:src="@drawable/map_list_white" />
 
             <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="160dp"
-                android:background="#5C6BC0"
-                android:src="@drawable/map_icon_white"
-                android:scaleType="centerInside"
-                android:layout_margin="10dp"
-                android:padding="35dp"
                 android:id="@+id/map_button"
-                />
-
-            <ImageButton
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/map_button_margin_top_bottom"
+                android:layout_marginTop="@dimen/map_button_margin_top_bottom"
                 android:layout_weight="1"
-                android:layout_height="160dp"
-                android:background="#FFF"
-                android:src="@drawable/map_icon_white"
-                android:scaleType="centerInside"
-                android:layout_margin="10dp"
-                android:padding="35dp"
-                />
-
+                android:background="@color/mapButtonColor"
+                android:padding="@dimen/map_button_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/map_icon_white" />
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

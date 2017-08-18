@@ -9,9 +9,7 @@ import android.content.Context;
 
 public class RetriveMyApplicationContext extends Application {
 
-
     private static RetriveMyApplicationContext mRetriveMyApplicationContext;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -19,12 +17,10 @@ public class RetriveMyApplicationContext extends Application {
     }
 
     public static RetriveMyApplicationContext getInstance() {
-
         return mRetriveMyApplicationContext;
     }
 
     public static Context getAppContext() {
-
         return mRetriveMyApplicationContext.getApplicationContext();
     }
 }

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_margin="5dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/fav_layout_margin">
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/fav_icon_dimen"
+        android:layout_height="@dimen/fav_icon_dimen"
         android:id="@+id/imageView"
         android:src="@drawable/favorite"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="@dimen/fav_icon_margin"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/locationTextView"
-        android:text="DADSADASDASDASDASDSADADASDAS"
-        android:textColor="#000"
+        android:textSize="@dimen/text_fav_size"
+        android:textColor="@color/textColorBlack"
         android:layout_gravity="center"
         />
 

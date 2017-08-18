@@ -19,7 +19,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final int DATABASE_VERSION = 1;
     //tables
     public static String ID = "id";
-    public static String SORT_ORDER = "sortOrder";
     public static final String DISPLAY_TEXT = "displayText";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
@@ -48,17 +47,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_DROP_LOCATION_TABLE);
         onCreate(db);
     }
-    public void updateLocation(String ID, int newPos, SQLiteDatabase db) {
-        ContentValues cv = new ContentValues();
-        cv.put(ID, newPos);
-        db.update(TABLE_NAME, cv, ID + "=" + newPos, null);
-    }
-    public void dropAndRecreateFavoritesDatabase(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(SQL_DROP_LOCATION_TABLE);
-        db.execSQL(SQL_CREATE_LOCATION_TABLE);
-    }
-    public ArrayList<String> GetAllVLocations(String aTable,String[] aColumn)
+    //getting all entries
+    public ArrayList<String> GetAllEntries(String aTable, String[] aColumn)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ArrayList<String> list = new ArrayList<String>();
@@ -75,7 +65,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         {
             cursor.close();
         }
-
         return list;
     }
 }

@@ -13,13 +13,12 @@ import android.support.v4.content.ContextCompat;
 
 public class PermissionCheck {
 
-    public  static final int PERMISSIONS_MULTIPLE_REQUEST = 123;
+    public static final int PERMISSIONS_MULTIPLE_REQUEST = 123;
     private Activity activity;
 
-    public PermissionCheck(){
-    }
+    public PermissionCheck() {}
 
-    public void checkForPermissions(Activity activity){
+    public void checkForPermissions(Activity activity) {
 
         this.activity = activity;
         if (ContextCompat.checkSelfPermission(activity,
@@ -31,7 +30,7 @@ public class PermissionCheck {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.ACCESS_COARSE_LOCATION) ||
                     (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                            Manifest.permission.ACCESS_FINE_LOCATION)))  {
+                            Manifest.permission.ACCESS_FINE_LOCATION))) {
 
             } else {
 
@@ -39,8 +38,6 @@ public class PermissionCheck {
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                 Manifest.permission.ACCESS_FINE_LOCATION},
                         PERMISSIONS_MULTIPLE_REQUEST);
-
-
             }
         }
     }

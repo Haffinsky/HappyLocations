@@ -3,6 +3,8 @@ package com.haffa.happylocations.LocationLogic;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 
 import android.location.Address;
@@ -11,7 +13,9 @@ import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +49,8 @@ public class LocationFetcher {
     private String actualLatitude;
     private String actualLongitude;
     Dialogs dialog;
+    protected GoogleApiClient googleApiClient;
+    protected LocationRequest locationRequest;
 
     public LocationFetcher() {
     }
@@ -56,15 +62,9 @@ public class LocationFetcher {
 
         if (ActivityCompat.checkSelfPermission(getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        mFusedLocationClient = new FusedLocationProviderClient(getAppContext());
         mFusedLocationClient.getLastLocation().addOnSuccessListener(activity, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -72,22 +72,23 @@ public class LocationFetcher {
                     List<Address> addresses;
                     Geocoder geocoder = new Geocoder(getAppContext());
                     try {
-                        displayLongitude = String.format("%.2f", location.getLongitude());
-                        displayLatitude = String.format("%.2f", location.getLatitude());
+                        //displayLongitude = String.format("%.2f", location.getLongitude());
+                        //displayLatitude = String.format("%.2f", location.getLatitude());
 
                         addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                         Address address = addresses.get(0);
                         streetName = address.getThoroughfare();
                         streetNumber = address.getFeatureName();
                         city = address.getLocality();
-                        title = displayLatitude + "/" + displayLongitude;
-                        header = city + ", " + streetName + " " + streetNumber;
+                       // title = displayLatitude + "/" + displayLongitude;
+                        title = streetName + " " + streetNumber;
+                        header = city;
                         actualLatitude = String.valueOf(location.getLatitude());
                         actualLongitude = String.valueOf(location.getLongitude());
 
                         dialog = new Dialogs();
-                        dialog.displayDialog(title, header, body, activity,
-                               actualLongitude, actualLatitude);
+                        dialog.showMaterialDialog(title, header, body, activity,
+                                actualLongitude, actualLatitude);
 
                     } catch (IOException e) {
                         e.printStackTrace();
